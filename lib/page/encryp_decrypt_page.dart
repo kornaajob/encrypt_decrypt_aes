@@ -20,20 +20,24 @@ class _EncryptDecryptPageState extends State<EncryptDecryptPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize AESUtil with secret key and salt
-    _aesUtil = AESUtil(secretKey: secretKey, salt: salt);
     _controllerJava.text =
         "kt0f7uwJzsunqEktgq2n4SrC15OKUftlHeamCgMTmREv6SKZ3KGuooPRk6QpMmr2vyuhaE34edsT6LpGcgSe84TQxbhEKPBa9x591R4kPQVgdPnAtisUdHXSVaw814gE";
   }
 
+  AESUtil initAesUtil() {
+    return AESUtil(secretKey: secretKey, salt: salt);
+  }
+
   void _encrypt() {
     setState(() {
+      _aesUtil = initAesUtil();
       _resultController.text = _aesUtil.encryptData(_controller.text);
     });
   }
 
   void _decrypt() {
     setState(() {
+      _aesUtil = initAesUtil();
       _resultController.text = _aesUtil.decryptData(_controller.text);
     });
   }
@@ -47,12 +51,14 @@ class _EncryptDecryptPageState extends State<EncryptDecryptPage> {
 
   void _encryptJava() {
     setState(() {
+      _aesUtil = initAesUtil();
       _resultControllerJava.text = _aesUtil.encryptData(_controllerJava.text);
     });
   }
 
   void _decryptJava() {
     setState(() {
+      _aesUtil = initAesUtil();
       _resultControllerJava.text = _aesUtil.decryptData(_controllerJava.text);
     });
   }
@@ -68,127 +74,129 @@ class _EncryptDecryptPageState extends State<EncryptDecryptPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                      12.0), // Optional: if you want rounded corners
                 ),
-                borderRadius: BorderRadius.circular(
-                    12.0), // Optional: if you want rounded corners
-              ),
-              child: Column(
-                children: <Widget>[
-                  const Text(
-                    'Encrypt Decrypt App',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter text',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: _encrypt,
-                        child: const Text('Encrypt'),
+                child: Column(
+                  children: <Widget>[
+                    const Text(
+                      'Encrypt Decrypt App',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
                       ),
-                      ElevatedButton(
-                        onPressed: _decrypt,
-                        child: const Text('Decrypt'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _clear,
-                        child: const Text('Clear'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _resultController,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Result',
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 90,
-              width: 50,
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2,
+                    TextField(
+                      controller: _controller,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Enter text',
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: _encrypt,
+                          child: const Text('Encrypt'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _decrypt,
+                          child: const Text('Decrypt'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _clear,
+                          child: const Text('Clear'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _resultController,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Result',
+                      ),
+                    ),
+                  ],
                 ),
-                borderRadius: BorderRadius.circular(
-                    12.0), // Optional: if you want rounded corners
               ),
-              child: Column(
-                children: <Widget>[
-                  const Text(
-                    'Encrypt Decrypt simple data form JAVA',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextField(
-                    controller: _controllerJava,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter text',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: _encryptJava,
-                        child: const Text('Encrypt'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _decryptJava,
-                        child: const Text('Decrypt'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _clearJava,
-                        child: const Text('Clear'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _resultControllerJava,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Result',
-                    ),
-                  ),
-                ],
+              const SizedBox(
+                height: 90,
+                width: 50,
               ),
-            )
-          ],
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                      12.0), // Optional: if you want rounded corners
+                ),
+                child: Column(
+                  children: <Widget>[
+                    const Text(
+                      'Encrypt Decrypt simple data form JAVA',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextField(
+                      controller: _controllerJava,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Enter text',
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: _encryptJava,
+                          child: const Text('Encrypt'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _decryptJava,
+                          child: const Text('Decrypt'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _clearJava,
+                          child: const Text('Clear'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: _resultControllerJava,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Result',
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
