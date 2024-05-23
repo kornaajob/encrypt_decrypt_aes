@@ -5,14 +5,13 @@ import 'dart:typed_data';
 class AESUtil {
   late BlockCipher _ecipher, _dcipher;
   AESUtil({required String secretKey, required String salt}) {
-    BlockCipher cipher = BlockCipher('AES/GCM');
     Digest sha3_256 = Digest('SHA3-256');
     Uint8List byteSecretKey = sha3_256.process(utf8.encode(secretKey));
     Uint8List byteSalt = sha3_256.process(utf8.encode(salt));
     ParametersWithIV params =
         ParametersWithIV(KeyParameter(byteSecretKey), byteSalt);
-    _ecipher = cipher..init(true, params);
-    _dcipher = cipher..init(false, params);
+    _ecipher = BlockCipher('AES/GCM')..init(true, params);
+    _dcipher = BlockCipher('AES/GCM')..init(false, params);
   }
   String encryptData(String data) {
     //get String to Byte Array
